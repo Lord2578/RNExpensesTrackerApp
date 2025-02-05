@@ -1,23 +1,35 @@
 import { StyleSheet, Text, View } from "react-native";
-
-import Input from "./Input";
 import { useState } from "react";
 
-function ExpenseForm() {
+import { GlobalStyles } from "../../constants/styles";
+import Button from "../UI/Button";
+import Input from "./Input";
+import { getFormattedDate } from "../../util/date";
+
+function ExpenseForm({ onCancel, submitButtonLabel, onSubmit, defaultValues }) {
   const [inputValues, setInputValues] = useState({
-    amount: '',
-    date: '',
-    description: '',
+    amount: defaultValues ? defaultValues.amount.toString() : "",
+    date: defaultValues ? getFormattedDate(defaultValues.date) : "",
+    description: defaultValues ? defaultValues.description : "",
   });
 
-
   function inputChangedHandler(inputIdentifier, enteredValue) {
-    setAmountValue((curInputValues) => {
-        return {
-            ...curInputValues,
-            [inputIdentifier]: enteredValue,
-        };
+    setInputValues((curInputValues) => {
+      return {
+        ...curInputValues,
+        [inputIdentifier]: enteredValue,
+      };
     });
+  }
+
+  function submitHandler() {
+    const expenseData = {
+      amount: +inputValues.amount,
+      date: new Date(inputValues.date),
+      description: inputValues.description,
+    };
+
+    onSubmit(expenseData);
   }
 
   return (
@@ -55,6 +67,14 @@ function ExpenseForm() {
           value: inputValues.description,
         }}
       />
+      <View style={styles.buttons}>
+        <Button style={styles.button} mode="flat" onPress={onCancel}>
+          Cancel
+        </Button>
+        <Button style={styles.button} onPress={submitHandler}>
+          {submitButtonLabel}
+        </Button>
+      </View>
     </View>
   );
 }
@@ -78,5 +98,21 @@ const styles = StyleSheet.create({
   },
   rowInput: {
     flex: 1,
+  },
+  buttons: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  button: {
+    minWidth: 120,
+    marginHorizontal: 8,
+  },
+  deleteContainer: {
+    marginVertical: 16,
+    alignItems: "center",
+    paddingTop: 8,
+    borderTopWidth: 2,
+    borderTopColor: GlobalStyles.colors.primary200,
   },
 });
