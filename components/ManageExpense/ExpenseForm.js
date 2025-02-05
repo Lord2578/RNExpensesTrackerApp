@@ -72,6 +72,7 @@ function ExpenseForm({ onCancel, submitButtonLabel, onSubmit, defaultValues }) {
         <Input
           style={styles.rowInput}
           label="Amount"
+          invalid={!inputs.amount.isValid}
           textInputConfig={{
             keyboardType: "decimal-pad",
             onChangeText: inputChangedHandler.bind(this, "amount"),
@@ -81,6 +82,7 @@ function ExpenseForm({ onCancel, submitButtonLabel, onSubmit, defaultValues }) {
         <Input
           style={styles.rowInput}
           label="Date"
+          invalid={!inputs.date.isValid}
           textInputConfig={{
             placeholder: "YYYY-MM-DD",
             maxLength: 10,
@@ -92,6 +94,7 @@ function ExpenseForm({ onCancel, submitButtonLabel, onSubmit, defaultValues }) {
 
       <Input
         label="Description"
+        invalid={!inputs.description.isValid}
         textInputConfig={{
           multiline: true,
           //  autoCorrect: false, // default is true
@@ -101,7 +104,9 @@ function ExpenseForm({ onCancel, submitButtonLabel, onSubmit, defaultValues }) {
         }}
       />
       {formIsInvalid && (
-        <Text>Invalid input values - please check your data</Text>
+        <Text style={styles.errorText}>
+          Invalid input values - please check your data
+        </Text>
       )}
       <View style={styles.buttons}>
         <Button style={styles.button} mode="flat" onPress={onCancel}>
@@ -134,6 +139,11 @@ const styles = StyleSheet.create({
   },
   rowInput: {
     flex: 1,
+  },
+  errorText: {
+    color: GlobalStyles.colors.error500,
+    textAlign: "center",
+    marginVertical: 16,
   },
   buttons: {
     flexDirection: "row",
